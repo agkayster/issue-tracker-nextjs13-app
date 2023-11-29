@@ -9,8 +9,8 @@ title is gotten from issue model with minimum character of 1 and maximum charact
 description is gotten from issue model as well
 */
 const createIssueSchema = z.object({
-	title: z.string().min(1).max(255),
-	description: z.string().min(1),
+	title: z.string().min(1, 'Title is required').max(255),
+	description: z.string().min(1, 'Description is required'),
 });
 
 export async function POST(request: NextRequest) {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
 	/*if validation is not successful */
 	if (!validation.success) {
-		return NextResponse.json(validation.error.errors, {
+		return NextResponse.json(validation.error.format(), {
 			/* 400 means bad request, client sent invaid data */
 			status: 400,
 		});
