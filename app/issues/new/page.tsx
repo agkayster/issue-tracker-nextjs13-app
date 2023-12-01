@@ -12,6 +12,7 @@ import axios from 'axios';
 /* use this router because it works with appRouter, latest with nextjs */
 import { useRouter } from 'next/navigation';
 import { createIssueSchema } from '@/app/validationSchema';
+import ErrorMessage from '@/app/components/ErrorMessage';
 
 // interface IssueForm {
 // 	title: string;
@@ -62,9 +63,9 @@ const NewIssuePage = () => {
 						{...register('title')}
 					/>
 				</TextField.Root>
-				{errors.title && (
-					<Text color='red' as="p">{errors.title.message}</Text>
-				)}
+
+				<ErrorMessage>{errors.title?.message}</ErrorMessage>
+
 				{/* use Controller because we can't use register destructure as above */}
 				<Controller
 					name='description'
@@ -73,11 +74,9 @@ const NewIssuePage = () => {
 						<SimpleMDE placeholder='Description' {...field} />
 					)}
 				/>
-				{errors.description && (
-					<Text color='red' as='p'>
-						{errors.description.message}
-					</Text>
-				)}
+
+				<ErrorMessage>{errors.description?.message}</ErrorMessage>
+
 				<Button>Submit New Issue</Button>
 			</form>
 		</div>
