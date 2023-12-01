@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { createIssueSchema } from '@/app/validationSchema';
 import ErrorMessage from '@/app/components/ErrorMessage';
+import Spinner from '@/app/components/Spinner';
 
 // interface IssueForm {
 // 	title: string;
@@ -33,6 +34,7 @@ const NewIssuePage = () => {
 		resolver: zodResolver(createIssueSchema),
 	});
 	const [error, setError] = useState('');
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	return (
 		<div className='max-w-xl'>
 			{error && (
@@ -48,11 +50,13 @@ const NewIssuePage = () => {
 				onSubmit={handleSubmit(async (data) => {
 					/* use try/catch block to handle/capture errors for the user */
 					try {
+						setIsSubmitting(true);
 						await axios.post('/api/issues', data);
 						router.push('/issues');
 					} catch (error) {
 						console.log('get error =>', error);
 						setError('An unexpected error occured');
+						setIsSubmitting(false);
 					}
 				})}
 				className='space-y-3'>
@@ -77,7 +81,9 @@ const NewIssuePage = () => {
 
 				<ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-				<Button>Submit New Issue</Button>
+				<Button disabled={isSubmitting}>
+					Submit New Issue {isSubmitting && <Spinner />}
+				</Button>
 			</form>
 		</div>
 	);
