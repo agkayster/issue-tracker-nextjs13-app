@@ -35,6 +35,21 @@ const NewIssuePage = () => {
 	});
 	const [error, setError] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const onSubmit = handleSubmit(async (data) => {
+		/* use try/catch block to handle/capture errors for the user */
+		try {
+			setIsSubmitting(true);
+			/* use axios to send our data to the backend API */
+			await axios.post('/api/issues', data);
+			router.push('/issues');
+		} catch (error) {
+			console.log('get error =>', error);
+			setError('An unexpected error occured');
+			setIsSubmitting(false);
+		}
+	});
+
 	return (
 		<div className='max-w-xl'>
 			{error && (
@@ -45,21 +60,7 @@ const NewIssuePage = () => {
 					<Callout.Text>{error}</Callout.Text>
 				</Callout.Root>
 			)}
-			<form
-				/* use axios to send our data to the backend API */
-				onSubmit={handleSubmit(async (data) => {
-					/* use try/catch block to handle/capture errors for the user */
-					try {
-						setIsSubmitting(true);
-						await axios.post('/api/issues', data);
-						router.push('/issues');
-					} catch (error) {
-						console.log('get error =>', error);
-						setError('An unexpected error occured');
-						setIsSubmitting(false);
-					}
-				})}
-				className='space-y-3'>
+			<form onSubmit={onSubmit} className='space-y-3'>
 				<TextField.Root>
 					{/* destructure register to get all the props */}
 					<TextField.Input
